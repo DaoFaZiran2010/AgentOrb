@@ -1,5 +1,11 @@
 # AgentOrb 开源就绪评估与准备清单
 
+> **状态更新（2026-11-13）**：P0 中"仓库整理 / 许可证 / 文档最小集 / 敏感信息清理"已落地——
+> `git init`（main 分支，首个提交 52 个文件）、`.gitignore` 已排除 `artifacts/ bin/ obj/ .tools/`、
+> MIT `LICENSE`、`README.md` + `README.zh-CN.md`、`CONTRIBUTING.md`、`CODE_OF_CONDUCT.md`、
+> `SECURITY.md`、`THIRD-PARTY-NOTICES.md` 均已提交。剩余前置项：GitHub 远程仓库与首个 push、
+> CI/Release 工作流、代码签名。
+
 评估日期：2026-11-13 · 评估对象：v0.1.8（90 个 C# 源文件，6 个项目）
 
 ---
