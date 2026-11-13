@@ -1,0 +1,209 @@
+<Window x:Class="AgentOrb.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="AgentOrb 灵动岛"
+        Width="380" Height="90"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="{x:Null}"
+        ResizeMode="NoResize"
+        Topmost="True"
+        ShowActivated="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="Manual"
+        SizeToContent="Manual"
+        Focusable="False">
+    <Grid x:Name="RootGrid" Background="{x:Null}">
+
+        <Border x:Name="IslandBorder"
+                Width="72" Height="34"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Margin="0,4,0,0"
+                IsHitTestVisible="True"
+                MouseLeftButtonUp="IslandBorder_MouseLeftButtonUp"
+                PreviewMouseRightButtonDown="IslandBorder_PreviewMouseRightButtonDown"
+                CornerRadius="17"
+                Background="#F20A0B0D"
+                BorderBrush="#40FFFFFF"
+                BorderThickness="1"
+                AutomationProperties.Name="AgentOrb 灵动岛">
+            <Border.ContextMenu>
+                <ContextMenu x:Name="MainContextMenu"
+                             Background="#FF242830"
+                             Foreground="White"
+                             BorderBrush="#FF454B59"
+                             Opened="MainContextMenu_Opened"
+                             Closed="MainContextMenu_Closed">
+                    <ContextMenu.Template>
+                        <ControlTemplate TargetType="{x:Type ContextMenu}">
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="6"
+                                    SnapsToDevicePixels="True">
+                                <StackPanel IsItemsHost="True"
+                                            KeyboardNavigation.DirectionalNavigation="Cycle" />
+                            </Border>
+                        </ControlTemplate>
+                    </ContextMenu.Template>
+                    <ContextMenu.Resources>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="FontSize" Value="12" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                                        <Border x:Name="ItemBorder"
+                                                Background="{TemplateBinding Background}"
+                                                Padding="12,6"
+                                                SnapsToDevicePixels="True">
+                                            <ContentPresenter ContentSource="Header"
+                                                              VerticalAlignment="Center"
+                                                              RecognizesAccessKey="True" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsHighlighted" Value="True">
+                                                <Setter TargetName="ItemBorder" Property="Background" Value="#FF37404E" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="ItemBorder" Property="Opacity" Value="0.55" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style TargetType="{x:Type Separator}">
+                            <Setter Property="Background" Value="#FF454B59" />
+                            <Setter Property="Margin" Value="8,4" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Separator}">
+                                        <Border Height="1" Background="{TemplateBinding Background}" />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ContextMenu.Resources>
+                    <MenuItem x:Name="StartDesktopMenuItem" Header="启动桌面" Click="StartDesktopMenuItem_Click" />
+                    <MenuItem x:Name="ToggleDesktopMenuItem" Header="查看桌面" Click="ToggleDesktopMenuItem_Click" />
+                    <Separator />
+                    <MenuItem Header="紧急停止" Click="EmergencyStopMenuItem_Click" />
+                    <Separator />
+                    <MenuItem Header="退出" Click="ExitMenuItem_Click" />
+                </ContextMenu>
+            </Border.ContextMenu>
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="18" ShadowDepth="2" Opacity="0.55" Color="#FF000000" />
+            </Border.Effect>
+
+            <Grid>
+                <StackPanel x:Name="CompactContent"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <Ellipse x:Name="DotStateEllipse"
+                             Width="7" Height="7"
+                             Margin="0,0,6,0"
+                             Fill="#FF8A919E" />
+                    <TextBlock x:Name="CompactStateText"
+                               Foreground="#FFB9C1CF"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Text="AI" />
+                    <TextBlock x:Name="CompactTimerText"
+                               Margin="6,0,0,0"
+                               Foreground="#FF7F8999"
+                               FontSize="9"
+                               VerticalAlignment="Center"
+                               Text="" />
+                </StackPanel>
+
+                <Grid x:Name="ExpandedContent"
+                      Visibility="Collapsed"
+                      Opacity="0"
+                      Margin="14,7,12,7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="58" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="17" />
+                        <RowDefinition Height="21" />
+                        <RowDefinition Height="12" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse x:Name="ExpandedStateEllipse"
+                                 Width="7" Height="7"
+                                 Margin="0,0,7,0"
+                                 Fill="#FF8A919E" />
+                        <TextBlock x:Name="AgentNameText"
+                                   Foreground="#FFE8ECF4"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   Text="AgentOrb" />
+                        <Border Margin="8,0,0,0"
+                                Padding="6,1"
+                                CornerRadius="5"
+                                Background="#FF252A33">
+                            <TextBlock x:Name="StateText"
+                                       Foreground="#FF9FD7FF"
+                                       FontSize="9.5"
+                                       Text="未连接" />
+                        </Border>
+                    </StackPanel>
+
+                    <TextBlock x:Name="MessageText"
+                               Grid.Row="1"
+                               Foreground="#FFF7F8FB"
+                               FontSize="13.5"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               Text="等待 Agent 状态" />
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Foreground="#FF6E7788" FontSize="9" Text="来源  " />
+                        <TextBlock x:Name="ToolNameText"
+                                   Foreground="#FF9EA7B6"
+                                   FontFamily="Consolas"
+                                   FontSize="9"
+                                   TextTrimming="CharacterEllipsis"
+                                   Text="status pipe" />
+                    </StackPanel>
+
+                    <TextBlock x:Name="ElapsedText"
+                               Grid.Column="1"
+                               Grid.Row="0"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Foreground="#FF9EA7B6"
+                               FontFamily="Consolas"
+                               FontSize="10"
+                               Text="" />
+
+                    <TextBlock x:Name="DesktopSummaryText"
+                               Grid.Column="1"
+                               Grid.Row="2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Foreground="#FF667080"
+                               FontSize="8.5"
+                               Visibility="Collapsed"
+                               TextTrimming="CharacterEllipsis"
+                               Text="点击查看" />
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

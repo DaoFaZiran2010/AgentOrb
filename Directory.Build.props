@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <Version>0.1.10</Version>
+    <FileVersion>0.1.10.0</FileVersion>
+    <AssemblyVersion>0.1.10.0</AssemblyVersion>
+    <InformationalVersion>0.1.10</InformationalVersion>
+    <Product>AgentOrb</Product>
+    <Company>AgentOrb</Company>
+  </PropertyGroup>
+</Project>

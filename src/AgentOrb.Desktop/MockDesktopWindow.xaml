@@ -1,0 +1,112 @@
+<Window x:Class="AgentOrb.Desktop.MockDesktopWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AgentOrb 演示桌面 · 非真实 AI 桌面"
+        Width="980" Height="680"
+        MinWidth="760" MinHeight="540"
+        WindowStartupLocation="CenterScreen"
+        Background="#FFE8EEF6"
+        ShowInTaskbar="True">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#FFFFE6A7" BorderBrush="#FFD3A637" BorderThickness="0,0,0,1" Padding="18,11">
+            <StackPanel>
+                <TextBlock Text="演示模式 · 非真实 AI 桌面"
+                           Foreground="#FF633F00"
+                           FontSize="18"
+                           FontWeight="Bold" />
+                <TextBlock Text="此窗口仅用于 AgentOrb 界面联调，不连接 Anode，也不执行真实桌面操作。"
+                           Foreground="#FF6D520E"
+                           FontSize="12"
+                           Margin="0,3,0,0" />
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="14">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#FF80A7CC" Offset="0" />
+                    <GradientStop Color="#FF537CAA" Offset="1" />
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,14" Width="86">
+                <Border Width="42" Height="34" HorizontalAlignment="Left" CornerRadius="4" Background="#FFE9F3FC" BorderBrush="#FF315C82" BorderThickness="2" />
+                <TextBlock Text="虚拟此电脑" Foreground="White" FontSize="11" Margin="-8,5,0,18" />
+                <Border Width="34" Height="38" HorizontalAlignment="Left" Margin="4,0,0,0" CornerRadius="3" Background="#FFE9F3FC" BorderBrush="#FF315C82" BorderThickness="2" />
+                <TextBlock Text="虚拟回收站" Foreground="White" FontSize="11" Margin="-8,5,0,0" />
+            </StackPanel>
+
+            <Border Width="610" Height="390"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    CornerRadius="8"
+                    Background="White"
+                    BorderBrush="#FFCBD4DF"
+                    BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="28" ShadowDepth="8" Opacity="0.28" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="38" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="28" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="#FFF7F9FC" CornerRadius="8,8,0,0" Padding="12,0">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border Width="16" Height="19" Background="White" BorderBrush="#FF6684A4" BorderThickness="1" Margin="0,0,9,0" />
+                                <TextBlock Text="记事本 — 演示文本.txt（虚拟）" Foreground="#FF24364A" FontSize="13" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <TextBlock Text="演示窗口" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#FF8290A1" FontSize="11" />
+                        </Grid>
+                    </Border>
+                    <Border Grid.Row="1" Background="#FFFCFDFE" BorderBrush="#FFEDF0F4" BorderThickness="0,0,0,1" Padding="12,0">
+                        <TextBlock Text="文件    编辑    查看    （菜单仅为视觉示意）" VerticalAlignment="Center" Foreground="#FF526274" FontSize="12" />
+                    </Border>
+                    <Grid Grid.Row="2" Margin="22,18">
+                        <StackPanel>
+                            <TextBlock Text="AgentOrb 演示记事本" FontSize="23" FontWeight="SemiBold" Foreground="#FF24364A" />
+                            <TextBlock Margin="0,18,0,0" FontSize="14" Foreground="#FF4F5E6E" TextWrapping="Wrap" LineHeight="25">
+                                <Run Text="这里显示的是虚拟桌面内容，用于验证观察、点击、输入、滚动和等待状态。" />
+                                <Run Text="所有内容均为静态示意，不代表真实 Anode 桌面，也不会控制您的鼠标或键盘。" />
+                            </TextBlock>
+                            <Border Margin="0,24,0,0" Padding="12" CornerRadius="5" Background="#FFF0F5FA">
+                                <TextBlock x:Name="ActivityText" Text="等待演示状态……" Foreground="#FF3B638C" FontSize="13" TextWrapping="Wrap" />
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                    <Border Grid.Row="3" Background="#FFF7F9FC" BorderBrush="#FFEDF0F4" BorderThickness="0,1,0,0" Padding="12,0">
+                        <TextBlock Text="虚拟记事本  |  仅作界面演示" VerticalAlignment="Center" Foreground="#FF8793A1" FontSize="11" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border Height="42" VerticalAlignment="Bottom" Background="#E6243448" Padding="14,0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="24" Height="24" CornerRadius="5" Background="#FF8FC1EC" />
+                        <Border Width="150" Height="26" CornerRadius="6" Background="#40FFFFFF" Margin="12,0,0,0">
+                            <TextBlock Text="虚拟任务栏" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White" FontSize="11" />
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Text="演示环境  ·  非真实系统" Foreground="White" FontSize="11" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="2" Background="#FFF5F7FA" BorderBrush="#FFD8DEE7" BorderThickness="0,1,0,0" Padding="14,8">
+            <TextBlock Text="AgentOrb Desktop 子项目  |  IDesktopController 演示实现  |  不冒充 Anode"
+                       Foreground="#FF617083"
+                       FontSize="11"
+                       HorizontalAlignment="Center" />
+        </Border>
+    </Grid>
+</Window>

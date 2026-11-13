@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>12</LangVersion>
+    <!-- WPF needs PerMonitorV2 via app.manifest; WFAC010 is emitted by the WinForms analyzer. -->
+    <NoWarn>$(NoWarn);WFAC010</NoWarn>
+    <AssemblyName>AgentOrb</AssemblyName>
+    <RootNamespace>AgentOrb.Desktop</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AgentOrb.Core\AgentOrb.Core.csproj" />
+    <ProjectReference Include="..\AgentOrb.Anode\AgentOrb.Anode.csproj" />
+  </ItemGroup>
+</Project>

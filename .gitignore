@@ -1,0 +1,22 @@
+# Build output
+bin/
+obj/
+
+# Local runtime, installers, acceptance artefacts and logs (never versioned)
+artifacts/
+*.log
+
+# Local SDK copy used for builds on this machine
+.tools/
+
+# Visual Studio / Rider / VS Code user state
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.idea/
+
+# OS noise
+Thumbs.db
+desktop.ini

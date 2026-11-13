@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>12</LangVersion>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AgentOrb.Core\AgentOrb.Core.csproj" />
+    <ProjectReference Include="..\..\src\AgentOrb.Anode\AgentOrb.Anode.csproj" />
+    <ProjectReference Include="..\..\src\AgentOrb.Bridge\AgentOrb.Bridge.csproj" />
+    <ProjectReference Include="..\..\src\AgentOrb.Desktop\AgentOrb.Desktop.csproj" />
+    <ProjectReference Include="..\..\src\AgentOrb.Setup\AgentOrb.Setup.csproj" />
+  </ItemGroup>
+</Project>
