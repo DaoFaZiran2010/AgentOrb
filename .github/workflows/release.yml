@@ -1,0 +1,99 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Publish self-contained Windows packages
+    runs-on: windows-latest
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_NOLOGO: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Verify tag matches project version
+        shell: pwsh
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $props = [xml](Get-Content Directory.Build.props)
+          $version = $props.Project.PropertyGroup.Version
+          if (-not $version) { throw 'Version not found in Directory.Build.props' }
+          if ("v$version" -ne $tag) { throw "Tag $tag does not match project version $version. Bump Directory.Build.props before tagging." }
+          "Tag $tag matches project version $version"
+          "RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Build and test (Release)
+        run: |
+          dotnet build AgentOrb.sln -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet run --project tests/AgentOrb.Tests/AgentOrb.Tests.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Publish single-file executables
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = 'artifacts\release'
+          New-Item -ItemType Directory -Force -Path "$out\runtime", "$out\setup" | Out-Null
+          $common = @('-c','Release','-r','win-x64','--self-contained','true',
+            '-p:PublishSingleFile=true','-p:EnableCompressionInSingleFile=true',
+            '-p:IncludeNativeLibrariesForSelfExtract=true','-p:DebugType=None','-p:DebugSymbols=false')
+          dotnet publish src/AgentOrb.Desktop/AgentOrb.Desktop.csproj @common -o "$out\runtime"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet publish src/AgentOrb.Bridge/AgentOrb.Bridge.csproj @common -o "$out\runtime"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet publish src/AgentOrb.Setup/AgentOrb.Setup.csproj @common -o "$out\setup"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Copy-Item "$out\runtime\AgentOrb.exe","$out\runtime\AgentOrb.Bridge.exe" "$out\setup"
+
+      - name: Package and hash
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = $env:RELEASE_VERSION
+          $out = 'artifacts\release'
+          $runtimeZip = "AgentOrb-v$version-win-x64.zip"
+          $setupZip = "AgentOrb-Setup-v$version-win-x64.zip"
+          Compress-Archive -Path "$out\runtime\*" -DestinationPath $runtimeZip -Force
+          Compress-Archive -Path "$out\setup\*" -DestinationPath $setupZip -Force
+          $hashes = Get-FileHash $runtimeZip,$setupZip -Algorithm SHA256 |
+            ForEach-Object { "{0}  {1}" -f $_.Hash, (Split-Path $_.Path -Leaf) }
+          $hashes | Out-File -FilePath SHA256SUMS.txt -Encoding utf8
+          $hashes | ForEach-Object { $_ }
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: AgentOrb ${{ github.ref_name }}
+          draft: false
+          prerelease: true
+          generate_release_notes: true
+          body: |
+            Self-contained Windows x64 packages for AgentOrb ${{ github.ref_name }}.
+
+            - `AgentOrb-Setup-*.zip` — installer (enables RDP host and child sessions; downloads pinned Anode at install time)
+            - `AgentOrb-v*-win-x64.zip` — runtime executables only
+
+            Verify downloads against `SHA256SUMS.txt`. Installation requires Windows 10/11 Pro or
+            Enterprise and an explicit `--accept-rdp-change` acknowledgement. See README.md for
+            usage and SECURITY.md for the threat model.
+
+            Note: binaries are currently unsigned; SmartScreen may warn.
+          files: |
+            AgentOrb-v${{ env.RELEASE_VERSION }}-win-x64.zip
+            AgentOrb-Setup-v${{ env.RELEASE_VERSION }}-win-x64.zip
+            SHA256SUMS.txt
