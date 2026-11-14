@@ -136,7 +136,10 @@ public partial class App : System.Windows.Application
         if (_mainWindow is null || !_mainWindow.IsVisible)
         {
             Shutdown(-1);
+            return;
         }
+
+        _ = ShutdownAsync();
     }
 
     protected override void OnExit(ExitEventArgs e)

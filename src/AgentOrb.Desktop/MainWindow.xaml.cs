@@ -15,15 +15,10 @@ namespace AgentOrb.Desktop;
 
 public partial class MainWindow : Window, IAgentStatusSink
 {
-    private const double DotSize = 30;
-    private const double ExpandedWidth = 320;
-    private const double ExpandedHeight = 128;
     private const double IslandExpandedWidth = 360;
     private const double IslandExpandedHeight = 64;
     private const double IslandCollapsedWidth = 72;
     private const double IslandCollapsedHeight = 34;
-    private const double WindowWidth = 460;
-    private const double WindowHeight = 120;
     private const double SnapThreshold = 28;
     private const int HotKeyId = 0x4F4F;
     private const int WmHotKey = 0x0312;
@@ -56,13 +51,10 @@ public partial class MainWindow : Window, IAgentStatusSink
     private bool _dragged;
     private bool _menuOpen;
     private bool _shutdownRequested;
-    private double _dotCenterX;
-    private double _dotCenterY;
     private System.Windows.Point _pointerStart;
     private double _dragStartLeft;
     private double _dragStartTop;
     private FrameworkElement? _captureElement;
-    private DockEdge _dockEdge = DockEdge.Right;
 
     public MainWindow(IDesktopController desktopController, bool isDemo)
     {
@@ -386,18 +378,6 @@ public partial class MainWindow : Window, IAgentStatusSink
         Top = workArea.Top + 2;
     }
 
-    private void ClampCollapsedPosition()
-    {
-        PlaceAtDefaultPosition();
-    }
-
-    private void PositionWindowFromDotCenter()
-    {
-        var dotCenterOffsetX = ExpandedWidth - DotSize / 2 - 2;
-        Left = _dotCenterX - dotCenterOffsetX;
-        Top = _dotCenterY - ExpandedHeight / 2;
-    }
-
     private Rect GetWorkArea()
     {
         if (Forms.Screen.AllScreens.Length == 0)
@@ -540,26 +520,14 @@ public partial class MainWindow : Window, IAgentStatusSink
         var workArea = GetWorkArea();
         if (Left <= workArea.Left + SnapThreshold)
         {
-            _dockEdge = DockEdge.Left;
+            Left = workArea.Left;
         }
-        else if (Left + ExpandedWidth >= workArea.Right - SnapThreshold)
+        else if (Left + Width >= workArea.Right - SnapThreshold)
         {
-            _dockEdge = DockEdge.Right;
-        }
-        else
-        {
-            _dockEdge = DockEdge.None;
+            Left = workArea.Right - Width;
         }
 
-        var dotOffsetFromWindow = ExpandedWidth - DotSize / 2 - 2;
-        _dotCenterX = _dockEdge switch
-        {
-            DockEdge.Left => workArea.Left + DotSize / 2 + 2,
-            DockEdge.Right => workArea.Right - DotSize / 2 - 2,
-            _ => Left + dotOffsetFromWindow
-        };
-        _dotCenterY = Top + ExpandedHeight / 2;
-        PositionWindowFromDotCenter();
+        Top = Math.Clamp(Top, workArea.Top, workArea.Bottom - Height);
         CollapseBubble();
     }
 
@@ -929,13 +897,6 @@ public partial class MainWindow : Window, IAgentStatusSink
         AgentState.Idle => new SolidColorBrush(System.Windows.Media.Color.FromRgb(180, 190, 205)),
         _ => new SolidColorBrush(System.Windows.Media.Color.FromRgb(138, 145, 158))
     };
-
-    private enum DockEdge
-    {
-        None,
-        Left,
-        Right
-    }
 
     [DllImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]

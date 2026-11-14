@@ -231,7 +231,7 @@ internal static class AnodeProvisioner
     private static HttpClient CreateHttpClient()
     {
         var client = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("AgentOrb-Setup/0.1.4");
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("AgentOrb-Setup/0.1.10");
         return client;
     }
 

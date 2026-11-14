@@ -6,7 +6,7 @@ namespace AgentOrb.Desktop;
 
 public sealed class SingleInstanceGuard : IDisposable
 {
-    private const string WindowTitlePrefix = "AgentOrb 悬浮监督";
+    private const string WindowTitlePrefix = "AgentOrb 灵动岛";
     private const string DefaultMutexName = @"Global\AgentOrb.SingleInstance.v1";
     private const int SwRestore = 9;
 

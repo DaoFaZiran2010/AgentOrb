@@ -16,7 +16,11 @@
         WindowStartupLocation="Manual"
         SizeToContent="Manual"
         Focusable="False">
-    <Grid x:Name="RootGrid" Background="{x:Null}">
+    <Grid x:Name="RootGrid" Background="{x:Null}"
+          MouseLeftButtonDown="RootGrid_MouseLeftButtonDown"
+          MouseMove="RootGrid_MouseMove"
+          MouseLeftButtonUp="RootGrid_MouseLeftButtonUp"
+          LostMouseCapture="RootGrid_LostMouseCapture">
 
         <Border x:Name="IslandBorder"
                 Width="72" Height="34"
